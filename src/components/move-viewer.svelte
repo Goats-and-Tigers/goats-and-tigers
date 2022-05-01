@@ -10,8 +10,10 @@
   onMount(() => {
     let logString = localStorage.getItem("log");
     let oldLog = JSON.parse(logString);
-    for (let i = 0; i < oldLog.length; i++) {
-      add_log(oldLog[i]);
+    if (oldLog) {
+      for (let i = 0; i < oldLog.length; i++) {
+        add_log(oldLog[i]);
+      }
     }
   });
   log.subscribe((l) => {
