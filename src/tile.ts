@@ -1,8 +1,8 @@
 export type PassiveTiles = "goat" | "horse" | "bird" | "sloth";
 export const passiveTiles = ["goat", "horse", "sloth"];
 
-export type AgressiveTiles = "tiger" | "bear" | "snake" | "mantis-shrimp";
-export const agressiveTiles = [
+export type AggressiveTiles = "tiger" | "bear" | "snake" | "mantis-shrimp";
+export const aggressiveTiles = [
   "tiger",
   "bear",
   "snake",
@@ -14,7 +14,7 @@ export type TileRow = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h";
 export type TileCol = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 export async function get_tile(
   color: "w" | "o",
-  name: PassiveTiles | AgressiveTiles
+  name: PassiveTiles | AggressiveTiles
 ) {
   return await import("./assets/tiles/" + color + "-" + name + ".svg");
 }
