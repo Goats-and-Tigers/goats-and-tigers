@@ -354,7 +354,9 @@
         if (
           tiles_around_from?.down?.str != to.str &&
           tiles_around_from?.down_diag_left?.str != to.str &&
-          tiles_around_from?.down_diag_right?.str != to.str
+          tiles_around_from?.down_diag_right?.str != to.str &&
+          tiles_around_from?.diag_right?.str != to.str &&
+          tiles_around_from?.diag_left?.str != to.str
         ) {
           return false;
         }
@@ -363,7 +365,9 @@
         if (
           tiles_around_from?.up?.str != to.str &&
           tiles_around_from?.diag_left?.str != to.str &&
-          tiles_around_from?.diag_right?.str != to.str
+          tiles_around_from?.diag_right?.str != to.str &&
+          tiles_around_from?.down_diag_left?.str != to.str &&
+          tiles_around_from?.down_diag_right?.str != to.str
         ) {
           return false;
         }
