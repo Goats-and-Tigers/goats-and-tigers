@@ -1,0 +1,23 @@
+/* Write your global styles here, in PostCSS syntax */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.option #indicator {
+  width: 50%;
+  height: 50%;
+}
+.option #overlay {
+  background: black;
+  position: absolute;
+  height: 50%;
+  width: 50%;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  opacity: 0.4;
+  transform: translate(-50%, -50%);
+}
+.is-tile #overlay {
+  background: #3f84e5 !important;
+}
