@@ -10,8 +10,7 @@ export const add_log = (...args: Array<string>) => {
     const last = e[e.length - 1];
     if (e.length == 0 || last.length == 2) {
       e.push([args.join(" ")]);
-    }
-    if (last.length != 2) {
+    } else if (last?.length != 2) {
       last.push(args.join(" "));
     }
     localStorage.setItem("log", JSON.stringify(e));
