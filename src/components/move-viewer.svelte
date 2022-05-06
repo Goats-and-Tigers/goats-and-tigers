@@ -5,16 +5,15 @@
 
   let el: HTMLDivElement;
   let viewableLog = [];
-  let count = 0;
 
   onMount(() => {
-    let logString = localStorage.getItem("log");
-    let oldLog = JSON.parse(logString);
-    if (oldLog) {
-      for (let i = 0; i < oldLog.length; i++) {
-        add_log(oldLog[i]);
-      }
-    }
+    //let logString = localStorage.getItem("log");
+    //let oldLog = JSON.parse(logString);
+    //if (oldLog) {
+    //for (let i = 0; i < oldLog.length; i++) {
+    //viewableLog = [...viewableLog, oldLog[i]];
+    //}
+    //}
   });
   log.subscribe((l) => {
     viewableLog = l;
