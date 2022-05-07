@@ -358,7 +358,6 @@
 
       if (turn == "o") {
         if (
-          tiles_around_from?.down?.str != to.str &&
           tiles_around_from?.down_diag_left?.str != to.str &&
           tiles_around_from?.down_diag_right?.str != to.str &&
           tiles_around_from?.diag_right?.str != to.str &&
@@ -369,7 +368,6 @@
       }
       if (turn == "w") {
         if (
-          tiles_around_from?.up?.str != to.str &&
           tiles_around_from?.diag_left?.str != to.str &&
           tiles_around_from?.diag_right?.str != to.str &&
           tiles_around_from?.down_diag_left?.str != to.str &&
@@ -380,6 +378,19 @@
       }
       return true;
     } else {
+      const tiles_around_from = get_tiles_around(from);
+
+      if (from_tile.tile_type == "sloth") {
+        if (
+          tiles_around_from?.up?.str != to.str &&
+          tiles_around_from?.down?.str != to.str &&
+          tiles_around_from?.left?.str != to.str &&
+          tiles_around_from?.right?.str != to.str
+        ) {
+          return false;
+        }
+      }
+
       return true;
     }
   }
@@ -459,21 +470,9 @@
               board[id].tile_color != turn &&
               aggressiveTiles.includes(selected.tile_type)
             ) {
-              if (
-                (turn == "w" &&
-                  tiles_selected?.diag_left?.str != pos.str &&
-                  tiles_selected?.up?.str != pos.str) ||
-                (turn == "o" &&
-                  tiles_selected?.down_diag_left?.str != pos.str &&
-                  tiles_selected?.down?.str != pos.str)
-              ) {
-                add_log("that piece cannot attack that way");
-                add_log(
-                  "attack left diagonal:",
-                  tiles_selected?.diag_left?.str
-                );
-                add_log("attack forward:", tiles_selected?.up?.str);
-                add_log("you attacked:", pos.str);
+              if (!is_valid_attack(selected_loc, pos)) {
+                // change to changing a status bar not logging to move log
+                add_log("Invalid consumption at", pos.str);
                 return;
               }
               add_log(
@@ -492,10 +491,11 @@
               return;
             } else {
               if (!aggressiveTiles.includes(selected.tile_type)) {
+                // change to changing a status bar not logging to move log
                 add_log(
                   "passive",
                   selected.tile_type,
-                  "cannot attack",
+                  "cannot consume",
                   pos.str
                 );
                 return;
@@ -516,16 +516,27 @@
       let tiles = [];
       Object.keys(around).forEach((k) => {
         const tile = board[around[k].str];
-        if (!is_valid_move(parse_tile_loc(selected.id), around[k])) {
+
+        const valid_move = is_valid_move(
+          parse_tile_loc(selected.id),
+          around[k]
+        );
+        const valid_attack = is_valid_attack(
+          parse_tile_loc(selected.id),
+          around[k]
+        );
+
+        if (!valid_move && !valid_attack) {
           return;
         }
+        // if square is empty and is a valid attack but not a valid move
+        // this means that it is not a valid move and the attack is invalid because the square is empty
+        if (tile.tile_type == "" && valid_attack && !valid_move) {
+          return;
+        }
+
         if (tile.tile_color != turn) {
-          const is_orange_take_dir =
-            selected.tile_color != "w" &&
-            (k == "down_diag_left" || k == "down");
-          const is_white_take_dir =
-            selected.tile_color != "o" && (k == "diag_left" || k == "up");
-          if (is_orange_take_dir || is_white_take_dir) {
+          if (valid_attack) {
             if (
               tile.tile_type != "" &&
               !passiveTiles.includes(selected.tile_type)
@@ -534,6 +545,7 @@
             }
           }
         }
+
         if (tile.tile_type == "") {
           tile.el.className += " option";
         }
@@ -541,6 +553,32 @@
       });
       return tiles;
     }
+  }
+
+  function is_valid_attack(from: Tile_Loc, to: Tile_Loc): boolean {
+    const from_tile = board[from.str];
+    if (!aggressiveTiles.includes(from_tile.tile_type)) {
+      return false;
+    }
+    const around_from_tile = get_tiles_around(from);
+
+    if (turn == "w") {
+      if (
+        around_from_tile?.up?.str != to.str &&
+        around_from_tile?.diag_left?.str != to.str
+      ) {
+        return false;
+      }
+    }
+    if (turn == "o") {
+      if (
+        around_from_tile?.down?.str != to.str &&
+        around_from_tile?.down_diag_left?.str != to.str
+      ) {
+        return false;
+      }
+    }
+    return true;
   }
 </script>
 
