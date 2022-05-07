@@ -266,7 +266,7 @@
     );
     if (
       (left_orange.length == 4 && left_white.length == 0) ||
-      (right_orange.length == 4 && right_white.length == 0)
+      (left_white.length == 4 && left_orange.length == 0)
     ) {
       state.win = true;
       state.who = "Orange";
@@ -277,8 +277,8 @@
       }
     }
     if (
-      (left_white.length == 4 && left_orange.length == 0) ||
-      (right_white.length == 4 && left_orange.length == 0)
+      (right_white.length == 4 && right_orange.length == 0) ||
+      (right_orange.length == 4 && right_white.length == 0)
     ) {
       state.win = true;
       state.who = "White";
