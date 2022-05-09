@@ -1,12 +1,19 @@
-/* Write your global styles here, in PostCSS syntax */
+@import url("https://use.typekit.net/jwb6hap.css");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background: #212738;
+  color: white;
+}
 .option #indicator {
   width: 50%;
   height: 50%;
 }
+
 .option #overlay {
   background: black;
   position: absolute;
