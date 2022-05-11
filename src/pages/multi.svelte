@@ -73,7 +73,10 @@
 
   async function parse_fen(str: string) {
     let board = {};
-    const rows = str.split("/");
+    const state = str.split(" ");
+    localStorage.setItem("turn", state[1][0]);
+
+    const rows = state[0].split("/");
     rows.forEach((r, ri) => {
       const rowName = rowNames[ri];
       let col = r.split("");
@@ -111,7 +114,7 @@
     return board;
   }
   onMount(async () => {
-    const state = parse_fen("GHTBLMRS/8/8/8/8/2h5/g2m4/1htblmrs");
+    const state = parse_fen("GHTBLMRS/8/8/8/8/2h5/g2m4/1htblmrs w");
     const board = await state;
     localStorage.setItem("board", JSON.stringify(board));
   });

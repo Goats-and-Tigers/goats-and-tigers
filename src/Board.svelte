@@ -35,6 +35,9 @@
   let cols = new Array(8).fill({});
 
   let turn: Players = "w";
+  if (localStorage.getItem("turn")) {
+    turn = localStorage.getItem("turn") as Players;
+  }
   let task: Tasks = "";
 
   let rows = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -352,8 +355,9 @@
   }
   let game_state = {};
   function getToken(token_type: "" | PassiveTiles | AggressiveTiles) {
-    if (token_type == "snake") return "L";
-    return token_type[0].toUpperCase();
+    if (token_type == "snake") return "l";
+    if (token_type == "bird") return "r";
+    return token_type[0];
   }
   function is_valid_move(from: Tile_Loc, to: Tile_Loc) {
     let from_tile = board[from.str];
@@ -469,6 +473,7 @@
               selected = null;
               task = "";
               switchTurn();
+              board_to_fen();
               localStorage.setItem("board", JSON.stringify(board));
               return;
             }
@@ -495,6 +500,7 @@
               selected = null;
               task = "";
               switchTurn();
+              board_to_fen();
               return;
             } else {
               if (!aggressiveTiles.includes(selected.tile_type)) {
@@ -586,6 +592,40 @@
       }
     }
     return true;
+  }
+
+  function board_to_fen() {
+    let fen = {
+      a: [],
+      b: [],
+      c: [],
+      d: [],
+      e: [],
+      f: [],
+      g: [],
+      h: [],
+    };
+    Object.keys(board).forEach((t) => {
+      const sq = board[t];
+      if (sq.tile_type.length && getToken(sq.tile_type)) {
+        if (sq.tile_color == "o") {
+          fen[t[0]].push(getToken(sq.tile_type).toUpperCase());
+        } else {
+          fen[t[0]].push(getToken(sq.tile_type));
+        }
+      } else {
+        const f = fen[t[0]];
+        if (parseInt(f[f.length - 1])) {
+          const num = parseInt(f[f.length - 1]);
+          f[f.length - 1] = num + 1;
+        } else {
+          f.push("1");
+        }
+      }
+    });
+    const fen_str = Object.values(fen).join("/").replace(/\,/g, "");
+    localStorage.setItem("fen_state", fen_str);
+    return fen_str;
   }
 </script>
 
