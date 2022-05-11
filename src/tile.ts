@@ -12,11 +12,11 @@ export const aggressiveTiles = [
 
 export type TileRow = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h";
 export type TileCol = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-export async function get_tile(
+export function get_tile(
   color: "w" | "o",
   name: PassiveTiles | AggressiveTiles
 ) {
-  return await import("./assets/tiles/" + color + "-" + name + ".svg");
+  return "src/assets/tiles/" + color + "-" + name + ".svg";
 }
 export const goat_w = get_tile("w", "goat");
 export const horse_w = get_tile("w", "horse");

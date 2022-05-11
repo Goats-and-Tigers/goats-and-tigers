@@ -2,8 +2,10 @@ module.exports = {
   content: ["./src/**/*.{html,js,svelte,ts}"],
   theme: {
     colors: {
-      lightGray: "#7A7A7A",
-      lightGreen: "#F8FFEF",
+      green: "#0B6E4F",
+      blush: "#EEE5E9",
+      orange: "#F19A3E",
+      blue: "#212738",
     },
   },
   fontFamily: {
