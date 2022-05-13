@@ -16,9 +16,10 @@ export function get_tile(
   color: "w" | "o",
   name: PassiveTiles | AggressiveTiles
 ) {
-  return "src/assets/tiles/" + color + "-" + name + ".svg";
+  return "/tiles/" + color + "-" + name + ".svg";
 }
 export const goat_w = get_tile("w", "goat");
+console.log(goat_w);
 export const horse_w = get_tile("w", "horse");
 export const bird_w = get_tile("w", "bird");
 export const sloth_w = get_tile("w", "sloth");
