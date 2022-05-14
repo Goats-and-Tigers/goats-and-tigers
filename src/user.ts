@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import { writable } from 'svelte/store';
 
 export const db = GUN({
-	peers: ['https://104.248.53.56:8080/gun']
+	peers: ['https://104.248.53.56:8080/server/gun']
 });
 export const user = db.user().recall({ sessionStorage: true });
 
