@@ -159,7 +159,6 @@
       );
     }
     db_game.map().once((e) => {
-      console.log(e);
       board_fen = e;
       let board = parse_fen(e);
       if (localStorage.getItem("turn") != localStorage.getItem("you")) {
