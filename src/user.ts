@@ -1,11 +1,13 @@
-import GUN from 'gun/gun.js';
 import 'gun/sea.js';
-import { writable } from 'svelte/store';
-import Cookies from 'js-cookie';
+
 import { browser } from '$app/env';
+import GUN from 'gun/gun.js';
+import Cookies from 'js-cookie';
+import { writable } from 'svelte/store';
 
 export const db = GUN({
-	peers: ['http://localhost:8080/gun']
+	peers: ['http://localhost:8080/gun'],
+	localStorage: false
 });
 export const user = db.user().recall({ sessionStorage: true });
 
