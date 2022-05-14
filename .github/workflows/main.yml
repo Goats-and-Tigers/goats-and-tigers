@@ -1,0 +1,30 @@
+name: remote ssh command
+on: [push]
+jobs:
+
+  build:
+    name: update server
+    runs-on: ubuntu-latest
+    steps:
+      - name: multiple command
+        uses: appleboy/ssh-action@master
+        env:
+          PATH: "/root/.local/share/pnpm:/root/.nvm/versions/node/v18.1.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+          NVM_DIR: "$HOME/.nvm"
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.ACTION_KEY }}
+          script: |
+            cd
+            PATH=/root/.local/share/pnpm:/root/.nvm/versions/node/v18.1.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+            source ~/.bashrc
+            sh ~/.bashrc
+            rm -r goats-and-tigers
+            git clone https://github.com/${{ github.repository }}
+            cd goats-and-tigers
+            /root/.local/share/pnpm/pnpm install
+            /root/.local/share/pnpm/pnpm build
+            /root/.local/share/pnpm/pm2 stop all
+            /root/.local/share/pnpm/pm2 start all
+            cd
