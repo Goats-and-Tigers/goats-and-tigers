@@ -13,4 +13,11 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.ACTION_KEY }}
           script: |
-            ls -al
+            cd
+            git clone ${{ github.repository }}
+            cd goats-and-tigers
+            pnpm install
+            pnpm build
+            pm2 stop all
+            pm2 start all
+            cd
