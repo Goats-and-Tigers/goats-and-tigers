@@ -14,7 +14,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
-		"@sveltejs/kit": "1.0.0-next.330",
+		"@sveltejs/kit": "next",
 		"@typescript-eslint/eslint-plugin": "^5.23.0",
 		"@typescript-eslint/parser": "^5.23.0",
 		"eslint": "^8.15.0",
@@ -29,7 +29,7 @@
 		"typescript": "~4.6.4"
 	},
 	"dependencies": {
-		"@sveltejs/adapter-vercel": "^1.0.0-next.51",
+		"@sveltejs/adapter-vercel": "next",
 		"@types/js-cookie": "^3.0.2",
 		"@types/uuid": "^8.3.4",
 		"autoprefixer": "^10.4.7",
