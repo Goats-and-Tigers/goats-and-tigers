@@ -1,4 +1,4 @@
-import GUN from 'gun/gun';
+import GUN from 'gun/gun.js';
 import 'gun/sea.js';
 import { writable } from 'svelte/store';
 import Cookies from 'js-cookie';
