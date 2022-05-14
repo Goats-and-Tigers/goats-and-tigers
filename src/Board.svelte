@@ -6,8 +6,9 @@
   import Viewer from "./components/move-viewer.svelte";
   import EndScreen from "./components/game-state.svelte";
   import { add_log } from "./log";
+  import { db } from "./user";
 
-  type Players = "w" | "o";
+  type Players = "w" | "o" | "";
   type Tasks = "" | "moving" | "attacking" | "finishing";
   interface Tile {
     id: string;
@@ -24,6 +25,7 @@
 
   let boardElement: HTMLDivElement;
   export let board: { [key: string]: Tile } = {};
+  export let multi = false;
   if (board.a1 != null) {
     console.log("passed in: ", board);
   } else {
@@ -34,7 +36,7 @@
 
   let cols = new Array(8).fill({});
 
-  let turn: Players = "w";
+  export let turn: Players = "w";
   if (localStorage.getItem("turn")) {
     turn = localStorage.getItem("turn") as Players;
   }
@@ -185,6 +187,10 @@
     turn = "w";
   };
   function switchTurn() {
+    if (multi) {
+      const fen = board_to_fen() as any;
+      db.get(localStorage.getItem("game_id")).set(fen);
+    }
     if (turn == "o") {
       turn = "w";
     } else {
@@ -625,7 +631,12 @@
     });
     const fen_str = Object.values(fen).join("/").replace(/\,/g, "");
     localStorage.setItem("fen_state", fen_str);
-    return fen_str;
+    if (turn == "w") {
+      return fen_str + " " + "o";
+    }
+    if (turn == "o") {
+      return fen_str + " " + "w";
+    }
   }
 </script>
 
