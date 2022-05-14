@@ -1,0 +1,16 @@
+name: remote ssh command
+on: [push]
+jobs:
+
+  build:
+    name: update server
+    runs-on: ubuntu-latest
+    steps:
+      - name: multiple command
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.ACTION_KEY }}
+          script: |
+            ls -al
