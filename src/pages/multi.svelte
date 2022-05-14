@@ -129,8 +129,9 @@
   let menu = true;
   let db_game;
   let board_state = JSON.parse(localStorage.getItem("board"));
-  let board_fen = localStorage.getItem("fen_state");
+  let board_fen = localStorage.getItem("fen_state") || "null w";
   let this_turn: any = "w";
+  let board_win_state;
   onMount(async () => {
     const params = new URLSearchParams(window.location.search);
     if (!user.is && !Cookies.get("u")) {
@@ -151,7 +152,14 @@
     if (!localStorage.getItem("fen_state")) {
       localStorage.setItem("fen_state", "GHTBLMRS/8/8/8/8/8/8/ghtblmrs w");
     }
+    if (!localStorage.getItem("board")) {
+      localStorage.setItem(
+        "fen_state",
+        JSON.stringify(parse_fen("GHTBLMRS/8/8/8/8/8/8/ghtblmrs w"))
+      );
+    }
     db_game.map().once((e) => {
+      console.log(e);
       board_fen = e;
       let board = parse_fen(e);
       if (localStorage.getItem("turn") != localStorage.getItem("you")) {
@@ -160,6 +168,31 @@
         this_turn = localStorage.getItem("turn");
       }
       localStorage.setItem("board", JSON.stringify(board));
+      if (
+        board_fen.split(" ")[1].length >= 2 &&
+        board_fen.split(" ")[1][1] == "r"
+      ) {
+        let player = board_fen.split(" ")[1][0];
+        // FEN string is sent as current board state.
+        // The player who's turn it was last would be the one to resign.
+        // That is why it returns opposite to fen string.
+        if (player == "w")
+          board_win_state = {
+            win: false,
+            stale: false,
+            resign: true,
+            who: "Orange",
+            state: "White won the game!",
+          };
+        if (player == "o")
+          board_win_state = {
+            win: false,
+            stale: false,
+            resign: true,
+            who: "White",
+            state: "Orange won the game!",
+          };
+      }
       board_state = board;
     });
   });
@@ -212,12 +245,32 @@
     {/if}
   </div>
 {/if}
-<p>
-  You: {localStorage.getItem("you")}
+<p class="-z-10">
+  You: {localStorage.getItem("you") || this_turn}
 </p>
-<p>
+<p class="-z-10">
   current turn: {board_fen.split(" ").length == 2
     ? board_fen.split(" ")[1][0]
     : ""}
 </p>
-<Board multi board={board_state} turn={this_turn} />
+<button
+  on:click={() => {
+    // localStorage.removeItem("board");
+    localStorage.removeItem("game_id");
+    localStorage.removeItem("you");
+    localStorage.removeItem("fen_state");
+    localStorage.setItem(
+      "board",
+      JSON.stringify(parse_fen("GHTBLMRS/8/8/8/8/8/8/ghtblmrs w"))
+    );
+    localStorage.setItem("fen_state", "GHTBLMRS/8/8/8/8/8/8/ghtblmrs w");
+    db.get(game_id).set(localStorage.getItem("fen_state") + "r");
+    menu = true;
+  }}>Resign</button
+>
+<Board
+  multi
+  board={board_state}
+  turn={this_turn}
+  game_state={board_win_state}
+/>

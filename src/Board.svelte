@@ -359,7 +359,7 @@
     }
     return check_sides();
   }
-  let game_state = {};
+  export let game_state = {};
   function getToken(token_type: "" | PassiveTiles | AggressiveTiles) {
     if (token_type == "snake") return "l";
     if (token_type == "bird") return "r";
