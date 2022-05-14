@@ -232,7 +232,7 @@
 			<p>Game Id</p>
 			<p class="text-base">(share with friends)</p>
 			<p class="text-orange">
-				http://localhost:3000/multi?id={game_id}
+				https://goats-and-tigers.doublequote.dev/?id={game_id}
 			</p>
 		{/if}
 		{#if join}
