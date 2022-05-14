@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@sveltejs/adapter-auto': next
+  '@sveltejs/adapter-node': ^1.0.0-next.73
   '@sveltejs/adapter-vercel': next
   '@sveltejs/kit': next
   '@types/js-cookie': ^3.0.2
@@ -26,6 +27,7 @@ specifiers:
   uuid: ^8.3.2
 
 dependencies:
+  '@sveltejs/adapter-node': 1.0.0-next.73
   '@sveltejs/adapter-vercel': 1.0.0-next.51
   '@types/js-cookie': 3.0.2
   '@types/uuid': 8.3.4
@@ -184,6 +186,12 @@ packages:
       esbuild: 0.14.39
       tiny-glob: 0.2.9
     dev: true
+
+  /@sveltejs/adapter-node/1.0.0-next.73:
+    resolution: {integrity: sha512-eidd7u1dPHIaBKMjRePrxazUt+Mm/JpnaiKLzZJBdamhBiiYIb+epkPLLqfG5Oo346/0HLKwFRAM/FXn3u3BHQ==}
+    dependencies:
+      tiny-glob: 0.2.9
+    dev: false
 
   /@sveltejs/adapter-vercel/1.0.0-next.51:
     resolution: {integrity: sha512-U4GSe1tYcWq90XCQfLK4qmEEVA1MyWgnT6i7LhbLVOoNP8bf3ict3xKjGrHcx/CY4jNUBA80DXSkj/hpFkweAg==}
@@ -1129,7 +1137,6 @@ packages:
 
   /globalyzer/0.1.0:
     resolution: {integrity: sha512-40oNTM9UfG6aBmuKxk/giHn5nQ8RVz/SS4Ir6zgzOv9/qC3kKZ9v4etGTcJbEl/NyVQH7FGU7d+X1egr57Md2Q==}
-    dev: true
 
   /globby/11.1.0:
     resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
@@ -1145,7 +1152,6 @@ packages:
 
   /globrex/0.1.2:
     resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
-    dev: true
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
@@ -1815,7 +1821,6 @@ packages:
     dependencies:
       globalyzer: 0.1.0
       globrex: 0.1.2
-    dev: true
 
   /to-regex-range/5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
