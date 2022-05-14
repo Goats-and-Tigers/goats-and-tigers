@@ -25,10 +25,14 @@
     "vite": "^2.9.5"
   },
   "dependencies": {
+    "@types/js-cookie": "^3.0.2",
+    "@types/uuid": "^8.3.4",
     "autoprefixer": "^10.4.5",
     "gun": "^0.2020.1237",
+    "js-cookie": "^3.0.1",
     "postcss": "^8.4.12",
     "tailwindcss": "^3.0.24",
+    "uuid": "^8.3.2",
     "vite-plugin-svelte-svg": "^1.0.0"
   }
 }
