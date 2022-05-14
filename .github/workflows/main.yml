@@ -8,6 +8,8 @@ jobs:
     steps:
       - name: multiple command
         uses: appleboy/ssh-action@master
+        env:
+          PATH: "/root/.local/share/pnpm:/root/.nvm/versions/node/v18.1.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
