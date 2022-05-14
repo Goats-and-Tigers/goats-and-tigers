@@ -6,7 +6,6 @@ import { writable } from 'svelte/store';
 
 export const db = GUN({
 	//peers: ['http://localhost:8080/gun'],
-	localStorage: false
 });
 export const user = db.user().recall({ sessionStorage: true });
 
