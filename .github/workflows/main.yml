@@ -10,6 +10,7 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           PATH: "/root/.local/share/pnpm:/root/.nvm/versions/node/v18.1.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+          NVM_DIR: "$HOME/.nvm"
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
@@ -17,6 +18,7 @@ jobs:
           script: |
             cd
             source ~/.bashrc
+            sh ~/.bashrc
             rm -r goats-and-tigers
             git clone https://github.com/${{ github.repository }}
             cd goats-and-tigers
