@@ -14,6 +14,7 @@ jobs:
           key: ${{ secrets.ACTION_KEY }}
           script: |
             cd
+            source ~/.bashrc
             git clone https://github.com/${{ github.repository }}
             cd goats-and-tigers
             pnpm install
