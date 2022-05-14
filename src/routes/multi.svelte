@@ -143,6 +143,7 @@
 			window.location.href = '/login';
 		}
 		if (params.get('id')) {
+			this_turn = 'o';
 			game_id = params.get('id');
 			localStorage.setItem('game_id', game_id as string);
 			localStorage.setItem('you', 'o');
@@ -232,7 +233,7 @@
 			<p>Game Id</p>
 			<p class="text-base">(share with friends)</p>
 			<p class="text-orange">
-				https://goats-and-tigers.doublequote.dev/?id={game_id}
+				https://goats-and-tigers.doublequote.dev/multi?id={game_id}
 			</p>
 		{/if}
 		{#if join}
