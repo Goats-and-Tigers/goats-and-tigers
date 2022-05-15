@@ -62,6 +62,7 @@
 			board[pos].tile = '';
 			board[pos].tile_type = '';
 			board[pos].tile_color = '';
+			localStorage.setItem('board', JSON.stringify(board));
 			return;
 		}
 		board[pos].tile = playable_tiles[turn][name];
@@ -190,7 +191,7 @@
 	function switchTurn() {
 		if (multi) {
 			const fen = board_to_fen() as any;
-			db.get(localStorage.getItem('game_id')).set(fen);
+			db.get(localStorage.getItem('game_id') as string).set(fen);
 		}
 		if (turn == 'o') {
 			turn = 'w';
