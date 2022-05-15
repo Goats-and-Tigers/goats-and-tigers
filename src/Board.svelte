@@ -159,13 +159,13 @@
 
 	const setup = async () => {
 		if (localStorage.getItem('board')) {
-			let oldBoard = localStorage.getItem('board');
-			oldBoard = JSON.parse(oldBoard);
+			let oldBoard: string = localStorage.getItem('board') as string;
+			let oldBoard_json: { [key: string]: Tile } = JSON.parse(oldBoard);
 			Object.keys(board).forEach((key) => {
-				board[key].tile = oldBoard[key].tile;
-				board[key].tile_type = oldBoard[key].tile_type;
-				board[key].tile_color = oldBoard[key].tile_color;
-				board[key].id = oldBoard[key].id;
+				board[key].tile = oldBoard_json[key].tile;
+				board[key].tile_type = oldBoard_json[key].tile_type;
+				board[key].tile_color = oldBoard_json[key].tile_color;
+				board[key].id = oldBoard_json[key].id;
 			});
 			return;
 		}
@@ -188,7 +188,7 @@
 		set_tile('sloth', 'a8', turn);
 		turn = 'w';
 	};
-	function switchTurn() {
+	function switch_turn() {
 		if (multi) {
 			const fen = board_to_fen() as any;
 			db.get(localStorage.getItem('game_id') as string).set(fen);
@@ -198,12 +198,12 @@
 		} else {
 			turn = 'o';
 		}
-		localStorage.setItem('turn', turn);
+		if (!multi) localStorage.setItem('turn', turn);
 		remove_indicators();
 	}
 	function remove_indicators() {
-		attackable.forEach((i) => {
-			i.el.className = i.el.className.replace('option', '').replace('is-tile', '');
+		attackable.forEach((i: Tile) => {
+			if (i.el) i.el.className = i.el.className.replace('option', '').replace('is-tile', '');
 		});
 	}
 	function get_tiles_played() {
@@ -215,8 +215,8 @@
 					pos: parse_tile_loc(t.id)
 				};
 			});
-		let orange = [];
-		let white = [];
+		let orange: Array<{ tile: Tile; pos: Tile_Loc }> = [];
+		let white: Array<{ tile: Tile; pos: Tile_Loc }> = [];
 		tiles.forEach((t) => {
 			if (t.tile.tile_color == 'o') {
 				orange.push(t);
@@ -421,9 +421,12 @@
 				let id = target.id;
 				if (!board[id] || id.length == 0) {
 					if (id == 'overlay') {
+						//@ts-ignore
 						id = target.parentElement.parentElement.id;
+						//@ts-ignore
 						target = target.parentElement.parentElement as HTMLDivElement;
 					} else {
+						//@ts-ignore
 						id = target.parentElement.id;
 						target = target.parentElement as HTMLDivElement;
 					}
@@ -460,7 +463,7 @@
 							set_tile('', parse_tile_loc(selected.id).str, turn);
 							selected = null;
 							task = '';
-							switchTurn();
+							switch_turn();
 							board_to_fen();
 							localStorage.setItem('board', JSON.stringify(board));
 							return;
@@ -487,7 +490,7 @@
 							set_tile('', selected.id, turn);
 							selected = null;
 							task = '';
-							switchTurn();
+							switch_turn();
 							board_to_fen();
 							return;
 						} else {
@@ -506,12 +509,15 @@
 			E.addEventListener('click', clickHandle);
 		});
 	});
-	function isAround() {
+	function isAround(): Array<Tile> {
 		if (selected) {
 			const around = get_tiles_around(parse_tile_loc(selected.id));
-			let tiles = [];
+			let tiles: Array<Tile> = [];
 			Object.keys(around).forEach((k) => {
 				const tile = board[around[k].str];
+				if (!tile.el) {
+					return;
+				}
 
 				const valid_move = is_valid_move(parse_tile_loc(selected.id), around[k]);
 				const valid_attack = is_valid_attack(parse_tile_loc(selected.id), around[k]);
@@ -540,6 +546,7 @@
 			});
 			return tiles;
 		}
+		return [];
 	}
 
 	function is_valid_attack(from: Tile_Loc, to: Tile_Loc): boolean {
@@ -566,7 +573,7 @@
 	}
 
 	function board_to_fen() {
-		let fen = {
+		let fen: { [key: string]: Array<string> } = {
 			a: [],
 			b: [],
 			c: [],
@@ -588,7 +595,7 @@
 				const f = fen[t[0]];
 				if (parseInt(f[f.length - 1])) {
 					const num = parseInt(f[f.length - 1]);
-					f[f.length - 1] = num + 1;
+					f[f.length - 1] = (num + 1).toString();
 				} else {
 					f.push('1');
 				}

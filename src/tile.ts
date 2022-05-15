@@ -30,7 +30,7 @@ export const bear_o = get_tile('o', 'bear');
 export const snake_o = get_tile('o', 'snake');
 export const m_shrimp_o = get_tile('o', 'mantis-shrimp');
 
-export const playable_tiles = {
+export const playable_tiles: { [key: string]: { [key: string]: string } } = {
 	w: {
 		goat: goat_w,
 		horse: horse_w,

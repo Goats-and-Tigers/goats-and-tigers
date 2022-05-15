@@ -1,8 +1,12 @@
 import { browser } from '$app/env';
 import { writable } from 'svelte/store';
 
-let Log: any;
-let Add_log;
+let Log: any = {
+	subscribe: () => {},
+	update: () => {},
+	set: () => {}
+};
+let Add_log = (..._msg: Array<string>) => {};
 if (browser) {
 	Log = writable<Array<Array<string>>>(JSON.parse(localStorage.getItem('log') as string) || []);
 	//let turn = [];
