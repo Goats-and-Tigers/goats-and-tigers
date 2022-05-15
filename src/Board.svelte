@@ -556,7 +556,7 @@
 		if (turn == 'o') {
 			if (
 				around_from_tile?.down?.str != to.str &&
-				around_from_tile?.down_diag_left?.str != to.str
+				around_from_tile?.down_diag_right?.str != to.str
 			) {
 				return false;
 			}
