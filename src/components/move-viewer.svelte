@@ -1,27 +1,33 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { db } from '../user';
 
-	import { add_log, log } from '../log';
+	import { log } from '../log';
+	import { browser } from '$app/env';
 
 	let el: HTMLDivElement;
-	let viewableLog = [];
+	let viewableLog: Array<Array<string>> = [];
+	export let multi: boolean = false;
 
-	onMount(() => {
-		//let logString = localStorage.getItem("log");
-		//let oldLog = JSON.parse(logString);
-		//if (oldLog) {
-		//for (let i = 0; i < oldLog.length; i++) {
-		//viewableLog = [...viewableLog, oldLog[i]];
-		//}
-		//}
-	});
-	if (log) {
-		log.subscribe((l) => {
+	if (log && !multi) {
+		log.subscribe((l: Array<Array<string>>) => {
 			viewableLog = l;
 			if (el) {
 				el.scrollIntoView();
 			}
 		});
+	}
+	if (browser && multi) {
+		db.get(('log_' + localStorage.getItem('game_id')) as string)
+			.map()
+			.once(async (e) => {
+				if (viewableLog) {
+					if (viewableLog[viewableLog.length - 1]?.length == 2 || viewableLog.length == 0) {
+						viewableLog = [...viewableLog, [e]];
+					} else {
+						viewableLog[viewableLog.length - 1] = [...viewableLog[viewableLog.length - 1], e];
+					}
+				}
+			});
 	}
 </script>
 

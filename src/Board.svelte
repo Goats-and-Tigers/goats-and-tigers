@@ -68,7 +68,9 @@
 		board[pos].tile = playable_tiles[turn][name];
 		board[pos].tile_type = name;
 		board[pos].tile_color = col;
-		localStorage.setItem('board', JSON.stringify(board));
+		if (!multi) {
+			localStorage.setItem('board', JSON.stringify(board));
+		}
 	}
 	function parse_tile_loc(pos: string): Tile_Loc {
 		const split = pos.split('');
@@ -404,7 +406,7 @@
 				const state = is_state();
 				if (state.win == true) {
 					// display message
-					add_log(state.state);
+					add_log(multi, state.state);
 					game_state = state;
 
 					E.removeEventListener('click', clickHandle);
@@ -412,7 +414,7 @@
 				}
 				if (state.stale == true) {
 					// display message
-					add_log(state.state);
+					add_log(multi, state.state);
 					game_state = state;
 					E.removeEventListener('click', clickHandle);
 					return;
@@ -458,7 +460,7 @@
 							if (!is_valid_move(selected_loc, parse_tile_loc(id))) {
 								return;
 							}
-							add_log(getToken(selected.tile_type) + id);
+							add_log(multi, getToken(selected.tile_type) + id);
 							set_tile(selected.tile_type, pos.str, turn);
 							set_tile('', parse_tile_loc(selected.id).str, turn);
 							selected = null;
@@ -475,10 +477,11 @@
 						) {
 							if (!is_valid_attack(selected_loc, pos)) {
 								// change to changing a status bar not logging to move log
-								add_log('Invalid consumption at', pos.str);
+								add_log(multi, 'Invalid consumption at', pos.str);
 								return;
 							}
 							add_log(
+								multi,
 								getToken(selected.tile_type) +
 									selected.id +
 									'-' +
@@ -496,7 +499,7 @@
 						} else {
 							if (!aggressiveTiles.includes(selected.tile_type)) {
 								// change to changing a status bar not logging to move log
-								add_log('passive', selected.tile_type, 'cannot consume', pos.str);
+								add_log(multi, 'passive', selected.tile_type, 'cannot consume', pos.str);
 								return;
 							}
 						}
@@ -677,6 +680,6 @@
 				</div>
 			{/each}
 		</div>
-		<Viewer />
+		<Viewer {multi} />
 	</div>
 </main>
