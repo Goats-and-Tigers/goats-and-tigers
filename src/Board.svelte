@@ -198,6 +198,7 @@
 		} else {
 			turn = 'o';
 		}
+		localStorage.setItem('turn', turn);
 		remove_indicators();
 	}
 	function remove_indicators() {
