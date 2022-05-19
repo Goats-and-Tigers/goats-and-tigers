@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { PassiveTiles, AggressiveTiles, TileRow, TileCol } from './tile';
+	import type { PassiveTiles, AggressiveTiles, TileRow, TileCol, Tile, Tile_Loc } from './tile';
 
 	import { aggressiveTiles, passiveTiles, playable_tiles } from './tile';
 	import Viewer from './components/move-viewer.svelte';
@@ -8,21 +8,10 @@
 	import { add_log } from './log';
 	import { db } from './user';
 	import { browser } from '$app/env';
+	import change from 'chance';
 
 	type Players = 'w' | 'o' | '';
 	type Tasks = '' | 'moving' | 'attacking' | 'finishing';
-	interface Tile {
-		id: string;
-		tile: string;
-		tile_type: PassiveTiles | AggressiveTiles | '';
-		el?: HTMLDivElement;
-		tile_color: Players | '';
-	}
-	interface Tile_Loc {
-		row: TileRow;
-		col: TileCol;
-		str: string;
-	}
 
 	let boardElement: HTMLDivElement;
 	export let board: { [key: string]: Tile } = {};
@@ -34,6 +23,7 @@
 	}
 	let selected: Tile;
 	let attackable: Array<Tile>;
+	let declared: Players;
 
 	let cols = new Array(8).fill({});
 
@@ -281,19 +271,19 @@
 		);
 		if (
 			(left_orange.length == 4 && left_white.length == 0) ||
-			(left_white.length == 4 && left_orange.length == 0)
+			(right_orange.length == 4 && right_white.length == 0)
 		) {
 			state.win = true;
 			state.who = 'Orange';
 			if (left_orange.length == 4) {
-				state.state = 'Orange won with 4 passive tiles aligned to the left.';
-			} else {
 				state.state = 'Orange won with 4 passive tiles aligned to the right.';
+			} else {
+				state.state = 'Orange won with 4 passive tiles aligned to the left.';
 			}
 		}
 		if (
-			(right_white.length == 4 && right_orange.length == 0) ||
-			(right_orange.length == 4 && right_white.length == 0)
+			(left_white.length == 4 && left_orange.length == 0) ||
+			(right_white.length == 4 && right_orange.length == 0)
 		) {
 			state.win = true;
 			state.who = 'White';
@@ -350,7 +340,7 @@
 		}
 		return check_sides();
 	}
-	export let game_state = {};
+	export let game_state: any = {};
 	function getToken(token_type: '' | PassiveTiles | AggressiveTiles) {
 		if (token_type == 'snake') return 'l';
 		if (token_type == 'bird') return 'r';
@@ -465,6 +455,7 @@
 							set_tile('', parse_tile_loc(selected.id).str, turn);
 							selected = null;
 							task = '';
+							is_declare_true();
 							switch_turn();
 							board_to_fen();
 							localStorage.setItem('board', JSON.stringify(board));
@@ -493,8 +484,10 @@
 							set_tile('', selected.id, turn);
 							selected = null;
 							task = '';
+							is_declare_true();
 							switch_turn();
 							board_to_fen();
+							localStorage.setItem('board', JSON.stringify(board));
 							return;
 						} else {
 							if (!aggressiveTiles.includes(selected.tile_type)) {
@@ -613,18 +606,96 @@
 			return fen_str + ' ' + 'w';
 		}
 	}
+	function declare_win() {
+		declared = turn;
+		if (turn == 'w') {
+			add_log(multi, 'White declared win');
+		} else {
+			add_log(multi, 'Orange declared win');
+		}
+		switch_turn();
+	}
+
+	function is_declare_true() {
+		const o_home = Object.values(board).filter(
+			(t) =>
+				t.id == 'a1' ||
+				t.id == 'a2' ||
+				t.id == 'a3' ||
+				t.id == 'a4' ||
+				t.id == 'a5' ||
+				t.id == 'a6' ||
+				t.id == 'a7' ||
+				t.id == 'a8'
+		);
+		const w_home = Object.values(board).filter(
+			(t) =>
+				t.id == 'h1' ||
+				t.id == 'h2' ||
+				t.id == 'h3' ||
+				t.id == 'h4' ||
+				t.id == 'h5' ||
+				t.id == 'h6' ||
+				t.id == 'h7' ||
+				t.id == 'h8'
+		);
+		const possible_pos_h_w = w_home.filter((t) => t.tile == '');
+		const possible_pos_h_o = o_home.filter((t) => t.tile == '');
+		if (declared) {
+			if (turn == declared) {
+				const state = is_state();
+				if (state.win == true && state.who[0].toLowerCase() == declared) {
+					return;
+				} else {
+					if (declared == 'o') {
+						let p_tiles = Object.values(board).filter(
+							(t: Tile) =>
+								(passiveTiles.includes(t.tile_type) || t.tile_type == 'bird') &&
+								t.tile_color == declared
+						);
+						let rand_tile_id = Math.floor(Math.random() * p_tiles.length);
+						let tile = p_tiles[rand_tile_id];
+						let dest_square = possible_pos_h_o[Math.floor(Math.random() * possible_pos_h_o.length)];
+						set_tile(tile.tile_type, dest_square.id, declared);
+						add_log(
+							multi,
+							'Orange blundered win declaration: ',
+							getToken(tile.tile_type) + tile.id
+						);
+						set_tile('', tile.id, declared);
+					}
+					if (declared == 'w') {
+						//TODO: replace with get_tiles_played
+						let p_tiles = Object.values(board).filter(
+							(t: Tile) =>
+								(passiveTiles.includes(t.tile_type) || t.tile_type == 'bird') &&
+								t.tile_color == declared
+						);
+						let rand_tile_id = Math.floor(Math.random() * p_tiles.length);
+						let tile = p_tiles[rand_tile_id];
+						let dest_square = possible_pos_h_w[Math.floor(Math.random() * possible_pos_h_w.length)];
+						set_tile(tile.tile_type, dest_square.id, declared);
+						add_log(multi, 'White blundered win declaration: ', getToken(tile.tile_type) + tile.id);
+						set_tile('', tile.id, declared);
+					}
+				}
+				declared = '';
+			}
+		}
+	}
 </script>
 
 <main>
 	<EndScreen state={game_state} />
-	<h1 class="font-sans">Goats and tigers</h1>
-	<button
-		on:click={() => {
-			localStorage.clear();
-			window.location.reload();
-		}}>reset</button
-	>
-
+	<div class="">
+		<button
+			on:click={() => {
+				localStorage.clear();
+				window.location.reload();
+			}}>reset</button
+		>
+		<button on:click={declare_win}>Declare win</button>
+	</div>
 	<div class="flex">
 		<div bind:this={boardElement} id="board-holder" class="h-[25vh] w-[40%] mmd:w-[80%]">
 			{#each rows as _, rowId}
