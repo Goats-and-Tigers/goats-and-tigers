@@ -31,7 +31,7 @@
 	}
 </script>
 
-<div class="ml-5 font-mono relative h-96 flex flex-col-reverse overflow-y-auto">
+<div class="font-mono relative h-fit flex flex-col-reverse overflow-y-auto w-fit">
 	<div bind:this={el}>LOG</div>
 	<div>
 		{#each viewableLog as line, i}

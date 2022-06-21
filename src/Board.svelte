@@ -8,7 +8,6 @@
 	import { add_log } from './log';
 	import { db } from './user';
 	import { browser } from '$app/env';
-	import change from 'chance';
 
 	type Players = 'w' | 'o' | '';
 	type Tasks = '' | 'moving' | 'attacking' | 'finishing';
@@ -120,7 +119,6 @@
 				str: rows[up_row] + pos.col
 			};
 		}
-
 		// get one row down
 		if (rows[down_row]) {
 			locations.down = {
@@ -687,69 +685,73 @@
 
 <main>
 	<EndScreen state={game_state} />
-	<div class="">
-		<button
-			on:click={() => {
-				localStorage.clear();
-				window.location.reload();
-			}}>reset</button
-		>
-		<button on:click={declare_win}>Declare win</button>
-	</div>
 	<div class="flex">
-		<div bind:this={boardElement} id="board-holder" class="h-[25vh] w-[40%] mmd:w-[80%]">
-			{#each rows as _, rowId}
-				<div class="flex relative">
-					{#each cols as _, colId}
-						{#if colId % 2 == 0 && rowId % 2 == 0}
-							<div
-								id={rows[rowId] + (colId + 1)}
-								bind:this={board[rows[rowId] + (colId + 1)].el}
-								class="w-[30%] pb-[12.6%] relative h-0 bg-green tile"
-							>
-								<div id="indicator">
-									<div id="overlay" />
-								</div>
-								<img
-									src={board[rows[rowId] + (colId + 1)].tile}
-									class="object-contain p-2"
-									alt={board[rows[rowId] + (colId + 1)].tile}
-								/>
-							</div>
-						{:else if rowId % 2 != 0 && colId % 2 != 0}
-							<div
-								id={rows[rowId] + (colId + 1)}
-								bind:this={board[rows[rowId] + (colId + 1)].el}
-								class="w-[30%] h-0  pb-[12.6%] relative bg-green tile"
-							>
-								<div id="indicator">
-									<div id="overlay" />
-								</div>
-								<img
-									src={board[rows[rowId] + (colId + 1)].tile}
-									class="object-contain p-2"
-									alt={board[rows[rowId] + (colId + 1)].tile}
-								/>
-							</div>
-						{:else}
-							<div
-								id={rows[rowId] + (colId + 1)}
-								bind:this={board[rows[rowId] + (colId + 1)].el}
-								class="w-[30%] h-0 pb-[12.6%] relative bg-blush tile"
-							>
-								<div id="indicator">
-									<div id="overlay" />
-								</div>
-								<img
-									src={board[rows[rowId] + (colId + 1)].tile}
-									class="object-contain p-2"
-									alt={board[rows[rowId] + (colId + 1)].tile}
-								/>
-							</div>
-						{/if}
+		<div class="w-[40%] mr-9 msm:text-green">
+			<div class="relative">
+				<div bind:this={boardElement} id="board-holder" class="aspect-square">
+					{#each rows as _, rowId}
+						<div class="flex relative">
+							{#each cols as _, colId}
+								{#if colId % 2 == 0 && rowId % 2 == 0}
+									<div
+										id={rows[rowId] + (colId + 1)}
+										bind:this={board[rows[rowId] + (colId + 1)].el}
+										class="w-[30%] pb-[12.6%] relative h-0 bg-green tile"
+									>
+										<div id="indicator">
+											<div id="overlay" />
+										</div>
+										<img
+											src={board[rows[rowId] + (colId + 1)].tile}
+											class="object-contain p-2"
+											alt={board[rows[rowId] + (colId + 1)].tile}
+										/>
+									</div>
+								{:else if rowId % 2 != 0 && colId % 2 != 0}
+									<div
+										id={rows[rowId] + (colId + 1)}
+										bind:this={board[rows[rowId] + (colId + 1)].el}
+										class="w-[30%] h-0  pb-[12.6%] relative bg-green tile"
+									>
+										<div id="indicator">
+											<div id="overlay" />
+										</div>
+										<img
+											src={board[rows[rowId] + (colId + 1)].tile}
+											class="object-contain p-2"
+											alt={board[rows[rowId] + (colId + 1)].tile}
+										/>
+									</div>
+								{:else}
+									<div
+										id={rows[rowId] + (colId + 1)}
+										bind:this={board[rows[rowId] + (colId + 1)].el}
+										class="w-[30%] h-0 pb-[12.6%] relative bg-blush tile"
+									>
+										<div id="indicator">
+											<div id="overlay" />
+										</div>
+										<img
+											src={board[rows[rowId] + (colId + 1)].tile}
+											class="object-contain p-2"
+											alt={board[rows[rowId] + (colId + 1)].tile}
+										/>
+									</div>
+								{/if}
+							{/each}
+						</div>
 					{/each}
 				</div>
-			{/each}
+			</div>
+			<div class="mt-9">
+				<button
+					on:click={() => {
+						localStorage.clear();
+						window.location.reload();
+					}}>reset</button
+				>
+				<button on:click={declare_win}>Declare win</button>
+			</div>
 		</div>
 		<Viewer {multi} />
 	</div>
